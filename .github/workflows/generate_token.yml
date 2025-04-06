@@ -1,0 +1,29 @@
+name: Generate YouTube Refresh Token
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-token:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          pip install google-auth-oauthlib
+
+      - name: Run script to get refresh token
+        env:
+          CLIENT_SECRET_JSON: ${{ secrets.CLIENT_SECRET_JSON }}
+        run: |
+          mkdir -p tools
+          echo "$CLIENT_SECRET_JSON" > tools/client_secret.json
+          python tools/get_youtube_refresh_token.py
